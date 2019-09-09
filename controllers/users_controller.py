@@ -1,25 +1,32 @@
 from flask import request
 from flask_restful import Resource, reqparse, abort
+from database.interface import FirebaseInterface
+import json
 
 
 class UsersController(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.USERS = {'rodrigo': {'asd': 'asd'}}
+        self.interface = FirebaseInterface()
 
-    def get(self, user_id=None):
-        if(user_id):
-            self.abort_if_user_doesnt_exist(user_id)
-            result = self.USERS[user_id]
+    def get(self, user_mail=None):
+        if user_mail:
+            dic = {"data": self.interface.getData("users", user_mail)}
         else:
-            result = "All users"
+            dic = {"data": self.interface.getData("users")}
 
-        return result
+        data = json.dumps(dic)
+        data_json = json.loads(data)
+        return data_json
 
     def post(self):
-        user = {'user': request.get_json()}
-        return user, 201
+        http_return_code = 201
+        result = request.get_json()
 
-    def abort_if_user_doesnt_exist(self, user_id):
-        if user_id not in self.USERS:
-            abort(404, message="User {} does not exist.".format(user_id))
+        try:
+            self.interface.addData(result, "users", result["email"])
+        except:
+            http_return_code = 404
+            result = "Motoristas devem possuir emails"
+
+        return result, http_return_code
