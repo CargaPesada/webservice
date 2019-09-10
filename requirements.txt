@@ -1,2 +1,4 @@
 Flask
 flask-restful
+firebase_admin
+gunicorn==19.9.0
