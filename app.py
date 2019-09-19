@@ -3,8 +3,10 @@ from flask import Flask
 from flask_restful import Resource, Api
 from controllers import users_controller
 from firebase_admin import credentials
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Cross-Origin Resource Sharing enabled for all URI
 api = Api(app)
 cred = credentials.Certificate("database/credentials.json")
 firebase_admin.initialize_app(cred)
