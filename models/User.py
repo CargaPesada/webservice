@@ -51,6 +51,7 @@ class User:
         self.validateFathersName(dict_user_data['nomepai'])
         self.validateUsersName(dict_user_data['nome'])
         self.validateGenre(dict_user_data['sexo'])
+        self.vallidateAddress(dict_user_data['endereco'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
@@ -87,3 +88,7 @@ class User:
     def validateGenre(self, genre):
         if genre != 'm' and genre != 'f':
             raise Exception('Sexo do usuario invalido')
+
+    def vallidateAddress(self, address):
+        if not address:
+            raise Exception('Endereco invalido')
