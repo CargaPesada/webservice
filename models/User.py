@@ -1,4 +1,6 @@
 import sys
+import re
+import datetime
 sys.path.append(".")
 from database.interface import FirebaseInterface
 from pycpfcnpj import cpfcnpj
@@ -44,6 +46,8 @@ class User:
 
         self.validateCargo(dict_user_data['cargo'])
         self.validateCPF(dict_user_data['cpf'])
+        self.validateMothersName(dict_user_data['nomemae'])
+        self.validateDDN(dict_user_data['ddn'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
@@ -53,3 +57,16 @@ class User:
     def validateCPF(self, cpf):
         if not cpfcnpj.validate(cpf):
             raise Exception('CPF invalido')
+
+    def validateMothersName(self, mothersName):
+        if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
+                         mothersName):
+            raise Exception('Nome da mae invalido')
+
+    def validateDDN(self, ddn):
+        try:
+            date = datetime.datetime.strptime(ddn, '%d/%m/%Y')
+            if (date.year > 2000 or date.year < 1919):
+                raise Exception
+        except:
+            raise Exception('Data de nascimento invalida')
