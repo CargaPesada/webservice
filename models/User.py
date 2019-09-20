@@ -33,7 +33,7 @@ class User:
                 self.user_keys[key] = True
             else:
                 raise Exception(
-                    'Usuario possui um campo invalido: {}'.format(key))
+                    'Usuario possui um campo inválido: {}'.format(key))
 
         not_found_values = []
         for key, value in self.user_keys.items():
@@ -46,26 +46,26 @@ class User:
 
         self.validateCargo(dict_user_data['cargo'])
         self.validateCPF(dict_user_data['cpf'])
-        self.validateMothersName(dict_user_data['nomemae'])
+        self.validateName(dict_user_data['nomemae'])
         self.validateDDN(dict_user_data['ddn'])
         self.validateFathersName(dict_user_data['nomepai'])
-        self.validateUsersName(dict_user_data['nome'])
+        self.validateName(dict_user_data['nome'])
         self.validateGenre(dict_user_data['sexo'])
         self.vallidateAddress(dict_user_data['endereco'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
         if not cargo in firebase_jobs['available']:
-            raise Exception('Cargo do usuario invalido: {}'.format(cargo))
+            raise Exception('Cargo do usuario inválido: {}'.format(cargo))
 
     def validateCPF(self, cpf):
         if not cpfcnpj.validate(cpf):
-            raise Exception('CPF invalido')
+            raise Exception('CPF inválido')
 
-    def validateMothersName(self, mothersName):
+    def validateName(self, name):
         if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
-                         mothersName):
-            raise Exception('Nome da mae invalido')
+                         name):
+            raise Exception('Nome {} é inválido'.format(name))
 
     def validateDDN(self, ddn):
         try:
@@ -78,17 +78,12 @@ class User:
     def validateFathersName(self, fathersName):
         if fathersName and not re.search(
                 "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$", fathersName):
-            raise Exception('Nome do pai invalido')
-
-    def validateUsersName(self, usersName):
-        if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
-                         usersName):
-            raise Exception('Nome do usuario invalido')
+            raise Exception('Nome do pai inválido')
 
     def validateGenre(self, genre):
         if genre != 'm' and genre != 'f':
-            raise Exception('Sexo do usuario invalido')
+            raise Exception('Sexo do usuario inválido')
 
     def vallidateAddress(self, address):
         if not address:
-            raise Exception('Endereco invalido')
+            raise Exception('Endereco inválido')
