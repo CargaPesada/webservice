@@ -2,6 +2,9 @@ from flask import request
 from flask_restful import Resource, reqparse, abort
 from database.interface import FirebaseInterface
 import json
+import sys
+sys.path.append(".")
+from models.User import User
 
 
 class UsersController(Resource):
@@ -24,9 +27,10 @@ class UsersController(Resource):
         result = request.get_json()
 
         try:
+            User(result)
             self.interface.addData(result, "users", result["email"])
-        except:
-            http_return_code = 404
-            result = "Motoristas devem possuir emails"
+        except Exception as e:
+            http_return_code = 400
+            result = str(e)
 
         return result, http_return_code
