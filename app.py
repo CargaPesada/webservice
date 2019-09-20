@@ -11,8 +11,8 @@ api = Api(app)
 cred = credentials.Certificate("database/credentials.json")
 firebase_admin.initialize_app(cred)
 
-api.add_resource(users_controller.UsersController,
-                 '/users/register', '/users/<user_mail>', '/users/all')
+api.add_resource(users_controller.UsersController, '/users/register',
+                 '/users/<user_mail>', '/users/all')
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
