@@ -48,6 +48,7 @@ class User:
         self.validateCPF(dict_user_data['cpf'])
         self.validateMothersName(dict_user_data['nomemae'])
         self.validateDDN(dict_user_data['ddn'])
+        self.validateFathersName(dict_user_data['nomepai'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
@@ -70,3 +71,8 @@ class User:
                 raise Exception
         except:
             raise Exception('Data de nascimento invalida')
+
+    def validateFathersName(self, fathersName):
+        if fathersName and not re.search(
+                "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$", fathersName):
+            raise Exception('Nome do pai invalido')
