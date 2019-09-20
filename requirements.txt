@@ -3,3 +3,4 @@ flask-restful
 firebase_admin
 gunicorn==19.9.0
 flask_cors
+pycpfcnpj

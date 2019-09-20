@@ -1,6 +1,7 @@
 import sys
 sys.path.append(".")
 from database.interface import FirebaseInterface
+from pycpfcnpj import cpfcnpj
 
 
 class User:
@@ -42,8 +43,13 @@ class User:
                 'Usuario deve conter os campos: {}'.format(not_found_values))
 
         self.validateCargo(dict_user_data['cargo'])
+        self.validateCPF(dict_user_data['cpf'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
         if not cargo in firebase_jobs['available']:
             raise Exception('Cargo do usuario invalido: {}'.format(cargo))
+
+    def validateCPF(self, cpf):
+        if not cpfcnpj.validate(cpf):
+            raise Exception('CPF invalido')
