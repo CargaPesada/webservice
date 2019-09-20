@@ -50,6 +50,7 @@ class User:
         self.validateDDN(dict_user_data['ddn'])
         self.validateFathersName(dict_user_data['nomepai'])
         self.validateUsersName(dict_user_data['nome'])
+        self.validateGenre(dict_user_data['sexo'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
@@ -82,3 +83,7 @@ class User:
         if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
                          usersName):
             raise Exception('Nome do usuario invalido')
+
+    def validateGenre(self, genre):
+        if genre != 'm' and genre != 'f':
+            raise Exception('Sexo do usuario invalido')
