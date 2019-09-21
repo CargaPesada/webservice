@@ -2,6 +2,7 @@ import firebase_admin
 from flask import Flask
 from flask_restful import Resource, Api
 from controllers import users_controller
+from controllers import offices_controller
 from firebase_admin import credentials
 from flask_cors import CORS
 
@@ -11,8 +12,17 @@ api = Api(app)
 cred = credentials.Certificate("database/credentials.json")
 firebase_admin.initialize_app(cred)
 
-api.add_resource(users_controller.UsersController, '/users/register',
-                 '/users/<user_mail>', '/users/all')
+# User endpoints
+api.add_resource(users_controller.UsersController,
+                 '/users/register', '/users/<user_mail>', '/users/all')
+
+# Office endpoints
+api.add_resource(offices_controller.OfficesController,
+                 '/office/register', '/office/all')
+api.add_resource(offices_controller.OfficeControllerById,
+                 '/office/<office_id>', '/office/delete/<office_id>', '/office/update/<office_id>')
+api.add_resource(offices_controller.OfficeControllerByRegion,
+                 '/office/all/<region>')
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
