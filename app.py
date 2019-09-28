@@ -26,6 +26,8 @@ api.add_resource(offices_controller.OfficeControllerById,
                  '/office/<office_id>', '/office/delete/<office_id>', '/office/update/<office_id>')
 api.add_resource(offices_controller.OfficeControllerByRegion,
                  '/office/all/<region>')
+api.add_resource(offices_controller.OfficeControllerByUser,
+                 '/office/all/user')
 
 # Trucks endpoints
 api.add_resource(trucks_controller.TrucksController,
