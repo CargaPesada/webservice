@@ -12,11 +12,8 @@ class UsersController(Resource):
         self.parser = reqparse.RequestParser()
         self.interface = FirebaseInterface()
 
-    def get(self, user_mail=None):
-        if user_mail:
-            dic = {"data": self.interface.getData("users", user_mail)}
-        else:
-            dic = {"data": self.interface.getData("users")}
+    def get(self):
+        dic = {"data": self.interface.getData("users")}
 
         data = json.dumps(dic)
         data_json = json.loads(data)
@@ -34,3 +31,47 @@ class UsersController(Resource):
             result = str(e)
 
         return result, http_return_code
+
+
+class UsersControllerById(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.interface = FirebaseInterface()
+
+    def get(self, user_mail):
+        dic = {"data": self.interface.getData("users", user_mail)}
+
+        data = json.dumps(dic)
+        data_json = json.loads(data)
+        return data_json
+
+    def delete(self, user_mail):
+        self.interface.deleteData("users", user_mail)
+
+    def put(self, user_mail):
+        result = request.get_json()
+        http_return_code = 200
+
+        try:
+            User(result)
+            self.interface.addData(result, "users", user_mail)
+        except Exception as e:
+            http_return_code = 400
+            result = str(e)
+
+        return result, http_return_code
+
+
+class UsersControllerByRegion(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.interface = FirebaseInterface()
+
+    def get(self, region):
+        dic = {"data": self.interface.getDataByField("users", "pais", region)}
+
+        data = json.dumps(dic)
+        data_json = json.loads(data)
+        return data_json
+
+

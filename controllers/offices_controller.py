@@ -50,7 +50,7 @@ class OfficeControllerByRegion(Resource):
         self.interface = FirebaseInterface()
 
     def get(self, region):
-        dic = {"data": self.interface.getDataByField("offices", 'pais', region)}
+        dic = {"data": self.interface.getDataByField("offices", "pais", region)}
 
         data = json.dumps(dic)
         data_json = json.loads(data)

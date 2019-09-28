@@ -48,7 +48,7 @@ class TrucksControllerByRegion(Resource):
         self.interface = FirebaseInterface()
 
     def get(self, region):
-        dic = {"data": self.interface.getDataByField("trucks", 'pais', region)}
+        dic = {"data": self.interface.getDataByField("trucks", "pais", region)}
 
         data = json.dumps(dic)
         data_json = json.loads(data)
