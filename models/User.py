@@ -63,13 +63,12 @@ class User:
             raise Exception('CPF inválido')
 
     def validateName(self, name):
-        if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
-                         name):
+        if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$", name):
             raise Exception('Nome {} é inválido'.format(name))
 
     def validateDDN(self, ddn):
         try:
-            date = datetime.datetime.strptime(ddn, '%d/%m/%Y')
+            date = datetime.datetime.strptime(ddn, '%Y-%m-%d')
             if (date.year > 2000 or date.year < 1919):
                 raise Exception
         except:
