@@ -24,7 +24,21 @@ class User:
             'sexo': False,
             'tipocnh': False
         }
-
+        self.user_result = {
+            'cargo': False,
+            'cpf': False,
+            'ddn': False,
+            'dependentes': False,
+            'email': False,
+            'endereco': False,
+            'nome': False,
+            'nomemae': False,
+            'nomepai': False,
+            'ocorrencias': False,
+            'senha': False,
+            'sexo': False,
+            'tipocnh': False
+        }
         self.validateUserData(dict_user_data)
 
     def validateUserData(self, dict_user_data):
@@ -35,55 +49,50 @@ class User:
                 raise Exception(
                     'Usuario possui um campo inválido: {}'.format(key))
 
-        not_found_values = []
         for key, value in self.user_keys.items():
             if not value:
-                not_found_values.append(key)
+                self.user_keys[key] = 404
 
-        if len(not_found_values) > 0:
-            raise Exception(
-                'Usuario deve conter os campos: {}'.format(not_found_values))
+        self.validateCargo(dict_user_data['cargo'], 'cargo')
+        self.validateCPF(dict_user_data['cpf'], 'cpf')
+        self.validateName(dict_user_data['nomemae'], 'nomemae')
+        self.validateDDN(dict_user_data['ddn'], 'ddn')
+        self.validateFathersName(dict_user_data['nomepai'], 'nomepai')
+        self.validateName(dict_user_data['nome'], 'nome')
+        self.validateGenre(dict_user_data['sexo'], 'sexo')
+        self.vallidateAddress(dict_user_data['endereco'], 'endereco')
 
-        self.validateCargo(dict_user_data['cargo'])
-        self.validateCPF(dict_user_data['cpf'])
-        self.validateName(dict_user_data['nomemae'])
-        self.validateDDN(dict_user_data['ddn'])
-        self.validateFathersName(dict_user_data['nomepai'])
-        self.validateName(dict_user_data['nome'])
-        self.validateGenre(dict_user_data['sexo'])
-        self.vallidateAddress(dict_user_data['endereco'])
-
-    def validateCargo(self, cargo):
+    def validateCargo(self, cargo, key):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
         if not cargo in firebase_jobs['available']:
-            raise Exception('Cargo do usuario inválido: {}'.format(cargo))
+            self.user_keys[key] = 400
 
-    def validateCPF(self, cpf):
+    def validateCPF(self, cpf, key):
         if not cpfcnpj.validate(cpf):
-            raise Exception('CPF inválido')
+            self.user_keys[key] = 400
 
-    def validateName(self, name):
+    def validateName(self, name, key):
         if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
                          name):
-            raise Exception('Nome {} é inválido'.format(name))
+            self.user_keys[key] = 400
 
-    def validateDDN(self, ddn):
+    def validateDDN(self, ddn, key):
         try:
             date = datetime.datetime.strptime(ddn, '%d/%m/%Y')
             if (date.year > 2000 or date.year < 1919):
                 raise Exception
         except:
-            raise Exception('Data de nascimento invalida')
+            self.user_keys[key] = 400
 
-    def validateFathersName(self, fathersName):
+    def validateFathersName(self, fathersName, key):
         if fathersName and not re.search(
                 "^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$", fathersName):
-            raise Exception('Nome do pai inválido')
+            self.user_keys[key] = 400
 
-    def validateGenre(self, genre):
+    def validateGenre(self, genre, key):
         if genre != 'm' and genre != 'f':
-            raise Exception('Sexo do usuario inválido')
+            self.user_keys[key] = 400
 
-    def vallidateAddress(self, address):
+    def vallidateAddress(self, address, key):
         if not address:
-            raise Exception('Endereco inválido')
+            self.user_keys[key] = 400

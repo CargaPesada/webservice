@@ -20,11 +20,17 @@ class OfficesController(Resource):
 
     def post(self):
         http_return_code = 201
-        result = request.get_json()
-
+        req = request.get_json()
         try:
-            Office(result)
-            self.interface.addData(result, "offices", None)
+            result = Office(req)
+            res = result.validateOfficeData()
+            print (res)
+            count = 0
+            for res in result:
+                if res == 400 or res == 404:
+                    count += 1
+            if count == 0:
+                self.interface.addData(result, "offices", None)
         except Exception as e:
             http_return_code = 400
             result = str(e)
