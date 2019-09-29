@@ -51,12 +51,24 @@ class Office:
         self.validateName(dict_office_data['endereco']['cidade'])
         self.validateName(dict_office_data['endereco']['estado'])
         self.validateNumber(dict_office_data['endereco']['numero'])
-        self.validateName(dict_office_data['endereco']['pais'])
+        self.validatePais(dict_office_data['endereco']['pais'])
         self.validateName(dict_office_data['endereco']['rua'])
 
     def validateCPF(self, cpf):
         if not cpfcnpj.validate(cpf):
             raise Exception('CPF inválido')
+        else:
+            allow = ["supervisor", "gerente", "diretor"]
+            user = self.interface.getDataByField('users', 'cpf', cpf)
+            if not user:
+                raise Exception('Não foi encontrado usuário com esse cpf')
+            print (user)
+            c = 0
+            for a in allow:
+                if a in str(user):
+                    c += 1
+            if c == 0:
+                raise Exception('Esse usuário não tem permissão')
 
     def validateName(self, name):
         if not re.search("^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$",
@@ -75,3 +87,8 @@ class Office:
         if not re.search("\d{5}-\d{3}", cep):
             raise Exception('CEP inválido'.format(cep))
 
+    def validatePais(self, pais):
+        list_paises = self.interface.getData('const_data', 'countries')
+
+        if pais not in list_paises['available']:
+            raise Exception('País inválido {}'.format(pais))
