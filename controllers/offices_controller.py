@@ -32,7 +32,6 @@ class OfficesController(Resource):
         return result, http_return_code
 
 
-
 class OfficeControllerById(Resource):
 
     def __init__(self):
@@ -62,7 +61,6 @@ class OfficeControllerById(Resource):
         return result, http_return_code
 
 
-
 class OfficeControllerByRegion(Resource):
 
     def __init__(self):
@@ -83,24 +81,8 @@ class OfficeControllerByUser(Resource):
         self.parser = reqparse.RequestParser()
         self.interface = FirebaseInterface()
 
-    def get(self):
-        dic = None
-
-        result = request.get_json()
-        token = result["token"]
-
-        userLogin = auth.get_user(token, None)
-
-        if userLogin is not None:
-            user_id = userLogin.email
-
-            user = self.interface.getDataByField("users", "id", user_id)
-
-            cargo = user[0]["cargo"]
-            cpf = user[0]["cpf"]
-
-            if cargo >= 2:
-                dic = {"data": self.interface.getDataByField("offices", "cpf", cpf)}
+    def get(self, cpf):
+        dic = {"data": self.interface.getDataByField("offices", "cpf", cpf)}
 
         data = json.dumps(dic)
         data_json = json.loads(data)

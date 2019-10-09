@@ -27,7 +27,7 @@ api.add_resource(offices_controller.OfficeControllerById,
 api.add_resource(offices_controller.OfficeControllerByRegion,
                  '/office/all/<region>')
 api.add_resource(offices_controller.OfficeControllerByUser,
-                 '/office/all/user')
+                 '/office/user/<cpf>')
 
 # Trucks endpoints
 api.add_resource(trucks_controller.TrucksController,
