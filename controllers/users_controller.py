@@ -3,6 +3,7 @@ from flask_restful import Resource, reqparse, abort
 from database.interface import FirebaseInterface
 import json
 import sys
+
 sys.path.append(".")
 from models.User import User
 
@@ -26,6 +27,30 @@ class UsersController(Resource):
         try:
             User(result)
             self.interface.addData(result, "users", result["email"])
+        except Exception as e:
+            http_return_code = 400
+            result = str(e)
+
+        return result, http_return_code
+
+    def put(self):
+        http_return_code = 200
+        result = request.get_json()
+
+        cpf = result["cpf"]
+        status = result["status"]
+
+        try:
+            user = self.interface.getDataByField("users", "cpf", cpf)
+
+            if user:
+                user[0]["status"] = status
+                self.interface.updateData(user[0], "users", user[0]["id"])
+                result = "Status atualizado com sucesso"
+            else:
+                result = "Usuario não encontrado"
+                http_return_code = 400
+
         except Exception as e:
             http_return_code = 400
             result = str(e)
@@ -73,5 +98,3 @@ class UsersControllerByRegion(Resource):
         data = json.dumps(dic)
         data_json = json.loads(data)
         return data_json
-
-
