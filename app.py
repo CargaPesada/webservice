@@ -13,7 +13,7 @@ firebase_admin.initialize_app(cred)
 
 # User endpoints
 api.add_resource(users_controller.UsersController,
-                 '/user/register', '/user/all')
+                 '/user/register', '/user/all', '/user/status')
 api.add_resource(users_controller.UsersControllerById,
                  '/user/<user_mail>', '/user/delete/<user_mail>', '/user/update/<user_mail>')
 api.add_resource(users_controller.UsersControllerByRegion,

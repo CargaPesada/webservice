@@ -44,7 +44,6 @@ class Office:
                 'Usuario deve conter os campos: {}'.format(not_found_values))
 
         self.validateCPF(dict_office_data['cpf'])
-        self.validateName(dict_office_data['nome'])
         self.validateTel(dict_office_data['telefone'])
         self.validateCep(dict_office_data['endereco']['CEP'])
         self.validateName(dict_office_data['endereco']['bairro'])

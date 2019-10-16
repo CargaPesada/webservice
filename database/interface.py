@@ -13,6 +13,10 @@ class FirebaseInterface:
         data['id'] = doc_ref.id
         doc_ref.set(data)
 
+    def updateData(self, data, collection, document=None):
+        doc_ref = self.db.collection(collection).document(document)
+        doc_ref.set(data)
+
     def getData(self, collection, document=None):
         if document:
             data_ref = self.db.collection(collection).document(document)
