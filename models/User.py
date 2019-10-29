@@ -1,6 +1,7 @@
 import sys
 import re
 import datetime
+
 sys.path.append(".")
 from database.interface import FirebaseInterface
 from pycpfcnpj import cpfcnpj
@@ -22,7 +23,8 @@ class User:
             'ocorrencias': False,
             'senha': False,
             'sexo': False,
-            'tipocnh': False
+            'tipocnh': False,
+            'status': False
         }
 
         self.validateUserData(dict_user_data)
@@ -52,6 +54,7 @@ class User:
         self.validateName(dict_user_data['nome'])
         self.validateGenre(dict_user_data['sexo'])
         self.vallidateAddress(dict_user_data['endereco'])
+        self.vallidateStatus(dict_user_data['status'])
 
     def validateCargo(self, cargo):
         firebase_jobs = self.interface.getData('const_data', 'jobs')
@@ -87,3 +90,7 @@ class User:
     def vallidateAddress(self, address):
         if not address:
             raise Exception('Endereco inválido')
+
+    def vallidateStatus(self, status):
+        if status is not True and status is not False:
+            raise Exception('Status inválido')
