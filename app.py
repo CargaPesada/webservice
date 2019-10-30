@@ -1,7 +1,7 @@
 import firebase_admin
 from flask import Flask
 from flask_restful import Api
-from controllers import users_controller, trucks_controller, offices_controller
+from controllers import users_controller, trucks_controller, offices_controller, schedules_controller
 from firebase_admin import credentials
 from flask_cors import CORS
 
@@ -36,6 +36,10 @@ api.add_resource(trucks_controller.TrucksControllerById,
                  '/truck/<truck_id>', '/truck/delete/<truck_id>', '/truck/update/<truck_id>')
 api.add_resource(trucks_controller.TrucksControllerByRegion,
                  '/truck/all/<region>')
+
+# Schedules endpoints
+api.add_resource(schedules_controller.SchedulesController,
+                 '/schedule/register', '/schedule/delete/<office_id>/<event_id>')
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
