@@ -1,4 +1,3 @@
-from firebase_admin import auth
 from flask import request
 from flask_restful import Resource, reqparse
 from database.interface import FirebaseInterface
@@ -25,6 +24,7 @@ class OfficesController(Resource):
 
         try:
             Office(result)
+            result["agenda"] = []
             self.interface.addData(result, "offices", None)
         except Exception as e:
             http_return_code = 400

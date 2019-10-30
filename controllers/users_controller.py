@@ -98,3 +98,19 @@ class UsersControllerByRegion(Resource):
         data = json.dumps(dic)
         data_json = json.loads(data)
         return data_json
+
+
+class UsersControllerByJob(Resource):
+
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.interface = FirebaseInterface()
+
+    def get(self, job):
+        dic = {"data": self.interface.getDataByField("users", "cargo", job)}
+
+        data = json.dumps(dic)
+        data_json = json.loads(data)
+        http_return_code = 200
+
+        return data_json, http_return_code
