@@ -18,6 +18,8 @@ api.add_resource(users_controller.UsersControllerById,
                  '/user/<user_mail>', '/user/delete/<user_mail>', '/user/update/<user_mail>')
 api.add_resource(users_controller.UsersControllerByRegion,
                  '/user/all/<region>')
+api.add_resource(users_controller.UsersControllerByJob,
+                 '/user/job/<job>')
 
 # Office endpoints
 api.add_resource(offices_controller.OfficesController,
