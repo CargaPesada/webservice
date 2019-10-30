@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
 from database.interface import FirebaseInterface
+import json
 
 
 class SchedulesController(Resource):
@@ -82,5 +83,25 @@ class SchedulesController(Resource):
         except Exception as e:
             http_return_code = 400
             result = str(e)
+
+        return result, http_return_code
+
+    def get(self, office_id):
+
+        try:
+            office = self.interface.getData("offices", office_id)
+
+            if office is None:
+                raise Exception("Oficina não encontrada")
+
+            schedule = {"data": office["agenda"]}
+
+            data = json.dumps(schedule)
+            result = json.loads(data)
+            http_return_code = 200
+
+        except Exception as e:
+            result = str(e)
+            http_return_code = 400
 
         return result, http_return_code
