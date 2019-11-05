@@ -41,7 +41,7 @@ api.add_resource(trucks_controller.TrucksControllerByRegion,
 
 # Schedules endpoints
 api.add_resource(schedules_controller.SchedulesController,
-                 '/schedule/register', '/schedule/delete/<office_id>/<event_id>', '/schedule/list/<office_id>')
+                 '/schedule/register', '/schedule/delete/<office_id>/<event_id>', '/schedule/list/<office_id>', '/schedule/update')
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
