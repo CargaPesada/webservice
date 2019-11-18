@@ -33,8 +33,8 @@ class Schedule:
         user_id = req["id_usuario"]
         self.mecanico = interface.getData("users", user_id)
 
-        truck_id = req["id_caminhao"]
-        self.caminhao = interface.getData("trucks", truck_id)
+        truck_board = req["placa_caminhao"]
+        self.caminhao = interface.getDataByField("trucks", "placa", truck_board)
 
         self.data = req["data"]
 
