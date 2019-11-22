@@ -39,6 +39,12 @@ class FirebaseInterface:
         doc_ref = self.db.collection(collection).document(document)
         doc_ref.delete()
 
+    def deleteItemFromArray(self, collection, document, field, data):
+        doc_ref = self.db.collection(collection).document(document)
+        doc_ref.update({
+            field: firestore.firestore.ArrayRemove([data])
+        })
+
     def getDataByField(self, collection, field, data):
         doc_ref = self.db.collection(collection).where(field, '==', data)
         docs = doc_ref.get()

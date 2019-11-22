@@ -61,6 +61,25 @@ class SchedulesController(Resource):
 
         return result, http_return_code
 
+    def delete(self, schedule_id):
+        try:
+            schedule = self.interface.getData("schedules", schedule_id)
+
+            if schedule is None:
+                raise Exception("Evento inválido")
+
+            self.interface.deleteItemFromArray("offices", schedule["oficina"], "agenda", schedule_id)
+            self.interface.deleteData("schedules", schedule_id)
+
+            result = "Evento deletado com sucesso"
+            http_return_code = 201
+
+        except Exception as e:
+            result = str(e)
+            http_return_code = 400
+
+        return result, http_return_code
+
     @staticmethod
     def validateRequest(req):
         expected_request = {"titulo",
