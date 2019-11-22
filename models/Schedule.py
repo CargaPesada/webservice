@@ -1,56 +1,27 @@
-from database.interface import FirebaseInterface
-
-
 class Schedule:
 
-    def __init__(self):
-        self.id = None
-        self.titulo = None
-        self.data = None
-        self.caminhao = None
-        self.mecanico = None
-
-    def validateFields(self, office_schedule):
-        if self.titulo is None:
-            raise Exception("Título não informado")
-
-        if self.data is None:
-            raise Exception("Data não informada")
-        else:
-            for event in office_schedule:
-                if event["data"] == self.data:
-                    raise Exception("Dia solicitado não está disponível")
-
-        if self.caminhao is None:
-            raise Exception("Caminhão não encontrado")
-
-        if self.mecanico is None or self.mecanico["cargo"] != "mecanico":
-            raise Exception("Mecânico não encontrado")
-
-    def buildObject(self, req):
-        interface = FirebaseInterface()
-
-        user_id = req["id_usuario"]
-        self.mecanico = interface.getData("users", user_id)
-
-        truck_board = req["placa_caminhao"]
-        self.caminhao = interface.getDataByField("trucks", "placa", truck_board)
-
-        self.data = req["data"]
-
+    def __init__(self, req):
+        self.id = None if req.get("id") is None else req["id"]
         self.titulo = req["titulo"]
+        self.data = req["data"]
+        self.oficina = req["id_oficina"]
+        self.mecanico = req["id_usuario"]
+        self.caminhao = req["placa_caminhao"]
 
-    def setId(self):
-        interface = FirebaseInterface()
+        self.validateScheduleData()
 
-        event_id = interface.getData("const_data", "office_id")
-        self.id = event_id["id"] + 1
-        interface.updateData({"id": event_id["id"] + 1}, "const_data", "office_id")
+    def validateScheduleData(self):
+        if self.titulo is None or not self.titulo:
+            raise Exception("Titulo do evento não pode ser nulo")
 
-    @staticmethod
-    def findIdIndex(id, office):
-        for index in range(len(office)):
-            if office[index]["id"] == id:
-                return index
-            elif index + 1 == len(office) and office[index]["id"] != id:
-                raise Exception("Id inválido")
+        if self.data is None or not self.data:
+            raise Exception("Data do evento não pode ser nula")
+
+        if self.oficina is None or not self.oficina:
+            raise Exception("Oficina onde o evento ocorrerá não pode ser nula")
+
+        if self.mecanico is None or not self.mecanico:
+            raise Exception("Mecânico que realizará a manutenção não pode ser nulo")
+
+        if self.caminhao is None or not self.caminhao:
+            raise Exception("Placa do caminhão não pode ser nula")
