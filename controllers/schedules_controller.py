@@ -28,12 +28,10 @@ class SchedulesController(Resource):
                 raise Exception("Oficina informada não encontrada")
             else:
                 office["agenda"].append(str(schedule.id))
-                self.interface.updateData(office, "offices", schedule.oficina)
-                self.interface.updateData({"id": schedule.id}, "const_data", "office_id")
 
-            schedule_data = self.interface.getDataByField("schedules", "data", schedule.data)
+            schedule_date = self.interface.getDataByTwoFields("schedules", "data", schedule.data, "oficina", schedule.oficina)
 
-            if schedule_data and schedule_data[0]["oficina"] == schedule.oficina:
+            if schedule_date:
                 raise Exception("Esta oficina já possui evento para essa data")
 
             user = self.interface.getData("users", schedule.mecanico)
@@ -51,6 +49,8 @@ class SchedulesController(Resource):
                 schedule.caminhao = truck[0]["id"]
 
             self.interface.setData(schedule.__dict__, "schedules", str(schedule.id))
+            self.interface.updateData(office, "offices", schedule.oficina)
+            self.interface.updateData({"id": schedule.id}, "const_data", "office_id")
 
             result = "Evento criado com sucesso"
             http_return_code = 201

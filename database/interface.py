@@ -48,3 +48,13 @@ class FirebaseInterface:
             result.append(doc.to_dict())
 
         return result
+
+    def getDataByTwoFields(self, collection, field, data, second_field, second_data):
+        doc_ref = self.db.collection(collection).where(field, '==', data).where(second_field, '==', second_data)
+        docs = doc_ref.get()
+        result = []
+
+        for doc in docs:
+            result.append(doc.to_dict())
+
+        return result
