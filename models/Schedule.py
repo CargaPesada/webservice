@@ -1,7 +1,7 @@
 class Schedule:
 
     def __init__(self, req):
-        self.id = None if req.get("id") is None else req["id"]
+        self.id = None if req.get("id") is None else int(req["id"])
         self.titulo = req["titulo"]
         self.data = req["data"]
         self.oficina = req["id_oficina"]

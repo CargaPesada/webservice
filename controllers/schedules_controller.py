@@ -22,15 +22,18 @@ class SchedulesController(Resource):
                 event_id = self.interface.getData("const_data", "office_id")
                 schedule.id = int(event_id["id"]) + 1
 
-            office = self.validateOfficeAndUpdate(schedule)
+            office = self.getOffice(schedule)
+            self.validateOffice(office)
 
             self.validateDate(schedule)
             self.validateUser(schedule.mecanico)
 
-            schedule = self.validateTruckAndUpdate(schedule)
+            truck = self.getTruck(schedule.caminhao)
+            self.validateTruck(truck)
+            schedule.caminhao = truck
 
             self.interface.setData(schedule.__dict__, "schedules", str(schedule.id))
-            self.interface.updateData(office, "offices", schedule.oficina)
+            self.interface.addItemToArray("offices", office["id"], "agenda", schedule.id)
             self.interface.updateData({"id": schedule.id}, "const_data", "office_id")
 
             result = "Evento criado com sucesso"
@@ -72,20 +75,24 @@ class SchedulesController(Resource):
             if schedule.id is None:
                 raise Exception("O campo id deve ser enviado")
             else:
-                previous_schedule = self.interface.getData("schedules", schedule.id)
+                previous_schedule = self.interface.getData("schedules", str(schedule.id))
 
             if schedule.data != previous_schedule["data"] and schedule.oficina == previous_schedule["oficina"]:
                 self.validateDate(schedule)
 
             self.validateUser(schedule.mecanico)
 
-            schedule = self.validateTruckAndUpdate(schedule)
+            truck = self.getTruck(schedule.caminhao)
+            self.validateTruck(truck)
+            schedule.caminhao = truck
 
             if previous_schedule["oficina"] != schedule.oficina:
                 self.interface.deleteItemFromArray("offices", previous_schedule["oficina"], "agenda", schedule.id)
 
-                office = self.validateOfficeAndUpdate(schedule)
-                self.interface.updateData(office, "offices", schedule.oficina)
+                office = self.getOffice(schedule)
+                self.validateOffice(office)
+
+                self.interface.addItemToArray("offices", office["id"], "agenda", schedule.id)
 
             self.interface.updateData(schedule.__dict__, "schedules", str(schedule.id))
 
@@ -117,14 +124,8 @@ class SchedulesController(Resource):
         elif keys_not_found.__len__() > 1:
             raise Exception("Os seguintes campos estão faltando: " + ", ".join(keys_not_found))
 
-    def validateOfficeAndUpdate(self, schedule):
-        office = self.interface.getData("offices", schedule.oficina)
-
-        if office is None:
-            raise Exception("Oficina informada não encontrada")
-        else:
-            office["agenda"].append(str(schedule.id))
-            return office
+    def getOffice(self, schedule):
+        return self.interface.getData("offices", schedule.oficina)
 
     def validateDate(self, schedule):
         schedule_date = self.interface.getDataByTwoFields("schedules", "data", schedule.data, "oficina",
@@ -141,11 +142,17 @@ class SchedulesController(Resource):
         elif user["cargo"] != "mecanico":
             raise Exception("Usuário fornecido possui o cargo de " + user["cargo"] + " e não o de mecânico")
 
-    def validateTruckAndUpdate(self, schedule):
-        truck = self.interface.getDataByField("trucks", "placa", schedule.caminhao)
+    def getTruck(self, caminhao):
+        truck = self.interface.getDataByField("trucks", "placa", caminhao)
 
+        return truck[0]["id"]
+
+    @staticmethod
+    def validateTruck(truck):
         if truck is None:
             raise Exception("Nenhum caminhão foi encontrado com essa placa")
-        else:
-            schedule.caminhao = truck[0]["id"]
-            return schedule
+
+    @staticmethod
+    def validateOffice(office):
+        if office is None:
+            raise Exception("Oficina informada não encontrada")
