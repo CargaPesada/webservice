@@ -107,6 +107,23 @@ class SchedulesController(Resource):
 
         return result, http_return_code
 
+    def get(self, schedule_id):
+        try:
+            dic = {"data": self.interface.getData("schedules", schedule_id)}
+
+            if not dic["data"]:
+                raise Exception("Id inválido")
+
+            data = json.dumps(dic)
+            result = json.loads(data)
+            http_return_code = 201
+
+        except Exception as e:
+            result = str(e)
+            http_return_code = 400
+
+        return result, http_return_code
+
     @staticmethod
     def validateRequest(req):
         expected_request = {"titulo",
