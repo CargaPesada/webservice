@@ -45,6 +45,8 @@ api.add_resource(schedules_controller.SchedulesController,
                  '/schedule/register', '/schedule/delete/<schedule_id>', '/schedule/update')
 api.add_resource(schedules_controller.SchedulesControllerByOffice,
                  '/schedule/list/<office_id>')
+api.add_resource(schedules_controller.SchedulesControllerByMechanic,
+                 '/schedule/<user_id>')
 
 # Services endpoints
 api.add_resource(services_controller.ServicesController,

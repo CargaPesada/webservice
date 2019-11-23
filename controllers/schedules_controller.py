@@ -184,3 +184,31 @@ class SchedulesControllerByOffice(Resource):
             http_return_code = 400
 
         return result, http_return_code
+
+
+class SchedulesControllerByMechanic(Resource):
+
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.interface = FirebaseInterface()
+
+    def get(self, user_id):
+        try:
+            user = self.interface.getData("users", user_id)
+
+            if user is None:
+                raise Exception("Usuário não encontrado no sistema")
+            elif user["cargo"] != "mecanico":
+                raise Exception("Usuário deve ser mecânico")
+
+            dic = {"data": self.interface.getDataByField("schedules", "mecanico", user_id)}
+
+            data = json.dumps(dic)
+            result = json.loads(data)
+            http_return_code = 201
+
+        except Exception as e:
+            result = str(e)
+            http_return_code = 400
+
+        return result, http_return_code
