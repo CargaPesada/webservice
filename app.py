@@ -42,7 +42,9 @@ api.add_resource(trucks_controller.TrucksControllerByRegion,
 
 # Schedules endpoints
 api.add_resource(schedules_controller.SchedulesController,
-                 '/schedule/register', '/schedule/delete/<schedule_id>', '/schedule/list/<office_id>', '/schedule/update')
+                 '/schedule/register', '/schedule/delete/<schedule_id>', '/schedule/update')
+api.add_resource(schedules_controller.SchedulesControllerByOffice,
+                 '/schedule/list/<office_id>')
 
 # Services endpoints
 api.add_resource(services_controller.ServicesController,

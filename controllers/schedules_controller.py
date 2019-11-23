@@ -1,3 +1,5 @@
+import json
+
 from flask import request
 from flask_restful import Resource, reqparse
 from database.interface import FirebaseInterface
@@ -156,3 +158,29 @@ class SchedulesController(Resource):
     def validateOffice(office):
         if office is None:
             raise Exception("Oficina informada não encontrada")
+
+
+class SchedulesControllerByOffice(Resource):
+
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.interface = FirebaseInterface()
+
+    def get(self, office_id):
+        try:
+            office = self.interface.getData("offices", office_id)
+
+            if office is None:
+                raise Exception("Oficina forncecida não encontrada")
+
+            dic = {"data": self.interface.getDataByField("schedules", "oficina", office_id)}
+
+            data = json.dumps(dic)
+            result = json.loads(data)
+            http_return_code = 201
+
+        except Exception as e:
+            result = str(e)
+            http_return_code = 400
+
+        return result, http_return_code
