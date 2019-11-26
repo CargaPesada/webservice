@@ -79,7 +79,7 @@ class Office:
             raise Exception('Número inválido'.format(num))
 
     def validateTel(self, tel):
-        if not re.search("(\(?\d{2}\)?\s?)(\d{4,5}\-?\d{4})", tel):
+        if not re.search("(\(?\d{2}\)?\s?)(\d{4,5}\-?\d{4,5})", tel):
             raise Exception('Telefone inválido'.format(tel))
 
     def validateCep(self, cep):
